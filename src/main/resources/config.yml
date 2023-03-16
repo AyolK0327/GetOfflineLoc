@@ -1,0 +1,7 @@
+ServerName: lobby
+#是否开启传送功能
+Switch: false
+Redis:
+  host: localhost
+  port: 6378
+  password: 4WYlacAwnzpBmELO

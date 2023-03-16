@@ -1,0 +1,43 @@
+package yumcraft.getofflineloc;
+
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+
+/**
+ * @author: Ayolk
+ * @create: 2023-03-16 22:05
+ * @url: github.com/AyolK0327/GetOfflineLoc
+ */
+public class command implements CommandExecutor {
+    private Plugin plugin;
+    command(Plugin plugin){
+        this.plugin = plugin;
+    }
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(args[0].equalsIgnoreCase("reload")){
+            plugin.reloadConfig();
+            plugin.saveConfig();
+            sender.sendMessage("重载配置成功." + plugin.getConfig().getString("ServerName"));
+        }
+        if(!(sender instanceof Player)){
+            return false;
+        }
+        Player player = (Player) sender;
+        Location location = player.getLocation();
+        if(args[0].equalsIgnoreCase("tp")){
+            if(!plugin.getConfig().getBoolean("Switch")){
+                sender.sendMessage("本服未开启传送功能.");
+                return false;
+            }
+            GetOfflineLocApi.Factory.getTeleportAPI().teleport(player,"World",location);
+        }
+
+        return false;
+    }
+}
