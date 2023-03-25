@@ -2,7 +2,7 @@ name: GetOfflineLoc
 version: '${project.version}'
 main: yumcraft.getofflineloc.GetOfflineLoc
 api-version: 1.19
-authors: [ AyolK ]
+authors: [ AyolK , Doofenshmirtz ]
 commands:
   GetOfflineLoc:
     aliases:
