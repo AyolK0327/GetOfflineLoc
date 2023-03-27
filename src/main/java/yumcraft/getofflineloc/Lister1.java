@@ -26,12 +26,21 @@ public class Lister1 implements Listener {
         if(plugin.getConfig().getBoolean("Switch")){
             return;
         }
+
         Location location = event.getPlayer().getLocation();
+        serializeUnity serializeUnity = new serializeUnity();
         String ServerName = plugin.getConfig().getString("ServerName");
-        String Key = "GetOfflineLoc:"+event.getPlayer().getUniqueId()+"."+ ServerName;
-        String value = new String(serializeToByte(location), StandardCharsets.ISO_8859_1);
-        new redis(plugin).UpdateData(Key,value);
+        String Key = "GetOfflineLoc:"+event.getPlayer().getUniqueId();
+        // 转换成json
+
+        serializeUnity.setLocation(location);
+        serializeUnity.serialize(ServerName);
+
+        new redis(plugin).UpdateData(Key,serializeUnity.getValue());
+
     }
+
+
 
 
 
