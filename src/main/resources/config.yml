@@ -1,6 +1,13 @@
 ServerName: lobby
 #是否开启传送功能
 Switch: false
+
+Mysql:
+  host: localhost
+  port: 3306
+  database: test      #UltimateGuild
+  username: root
+  password: '1234567890'
 Redis:
   host: localhost
   port: 6378

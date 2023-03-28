@@ -1,4 +1,4 @@
-package yumcraft.getofflineloc;
+package yumcraft.getofflineloc.Unity;
 
 import org.bukkit.Location;
 import org.json.simple.JSONObject;

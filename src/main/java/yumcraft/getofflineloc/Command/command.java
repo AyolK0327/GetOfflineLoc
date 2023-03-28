@@ -1,4 +1,4 @@
-package yumcraft.getofflineloc;
+package yumcraft.getofflineloc.Command;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import yumcraft.getofflineloc.API.GetOfflineLocApi;
 
 /**
  * @author: Ayolk
@@ -15,11 +16,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class command implements CommandExecutor {
     private Plugin plugin;
-    command(Plugin plugin){
+    public command(Plugin plugin){
         this.plugin = plugin;
     }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        Player player = sender instanceof Player ? (Player) sender : null;
         if(args[0].equalsIgnoreCase("reload")){
             plugin.reloadConfig();
             plugin.saveConfig();
@@ -28,7 +30,7 @@ public class command implements CommandExecutor {
         if(!(sender instanceof Player)){
             return false;
         }
-        Player player = (Player) sender;
+        
         Location location = player.getLocation();
         if(args[0].equalsIgnoreCase("tp")){
             if(!plugin.getConfig().getBoolean("Switch")){

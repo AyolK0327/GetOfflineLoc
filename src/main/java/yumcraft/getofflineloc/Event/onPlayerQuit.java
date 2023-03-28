@@ -1,14 +1,14 @@
-package yumcraft.getofflineloc;
+package yumcraft.getofflineloc.Event;
 
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-import redis.clients.jedis.Jedis;
+import yumcraft.getofflineloc.Unity.serializeUnity;
+import yumcraft.getofflineloc.Redis.redis;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
@@ -16,13 +16,13 @@ import java.util.Map;
  * @create: 2023-03-16 21:36
  * @url: github.com/AyolK0327/GetOfflineLoc
  */
-public class Lister1 implements Listener {
+public class onPlayerQuit implements Listener {
     private Plugin plugin;
-    Lister1(Plugin plugin){
+    public onPlayerQuit(Plugin plugin){
         this.plugin = plugin;
     }
     @EventHandler
-    public void onPlayerLe(PlayerQuitEvent event){
+    public void onPlayerQuit(PlayerQuitEvent event){
         if(plugin.getConfig().getBoolean("Switch")){
             return;
         }
