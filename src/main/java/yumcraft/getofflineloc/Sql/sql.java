@@ -16,8 +16,9 @@ import java.sql.SQLException;
  * @url: github.com/AyolK0327/GetOfflineLoc
  */
 public class sql {
-    private HikariDataSource hikari;
-    public void ConnectSql() throws SQLException {
+    private static HikariDataSource hikari;
+
+    public HikariDataSource getHikari(){
         HikariConfig config = new HikariConfig();
         config.setConnectionTimeout(30000);
         config.setMinimumIdle(10);
@@ -30,21 +31,30 @@ public class sql {
         config.setAutoCommit(true);
 
         hikari = new HikariDataSource(config);
-
+        execute(Query.CREATE_TABLE);
+        return hikari;
     }
 
     //增加
-    public void Insert(String Query,Object... parameters) {
+    public void Insert(Object... parameters) {
         try {
-            execute(Query,parameters);
+            execute(Query.INSERT_USER,parameters);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-    //查询
-    public boolean hasValue(String Query,Object... parameters) {
+    public void Update(Object... parameters) {
         try {
-            ResultSet resultSet = executeQuery(Query,parameters);
+            execute(Query.UPDATE_LOCATION,parameters);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //查询
+    public boolean hasValue(Object... parameters) {
+        try {
+            ResultSet resultSet = executeQuery(Query.GET_LOCATION,parameters);
             if (resultSet != null) {
                 return resultSet.next();
             }
@@ -57,7 +67,7 @@ public class sql {
     //删除 may not
 
     //抄来的,记得写
-    private void execute(String query, Object... parameters) {
+    private static void execute(String query, Object... parameters) {
 
         try (Connection connection = hikari
                 .getConnection(); PreparedStatement statement = connection

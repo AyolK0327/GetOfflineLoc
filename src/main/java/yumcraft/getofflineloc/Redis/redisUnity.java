@@ -12,19 +12,19 @@ import java.util.HashMap;
  * @create: 2023-03-16 21:46
  * @url: github.com/AyolK0327/GetOfflineLoc
  */
-public class redis {
+public class redisUnity {
     private Plugin plugin;
-    private  Jedis jedis;
-    public redis(Plugin plugin){
+    private Jedis jedis;
+    public redisUnity(Plugin plugin){
         this.plugin = plugin;
     }
-   public Jedis ConnectRedis(){
+   public Jedis getJedis(){
        String host = plugin.getConfig().getString("Redis.host");
        int port = plugin.getConfig().getInt("Redis.port");
        String password = plugin.getConfig().getString("Redis.password");
        JedisPool jedisPool = new JedisPool(host, port);
        //通过连接池对象获取连接redis的连接对象
-       this.jedis = jedisPool.getResource();
+       jedis = jedisPool.getResource();
        jedis.auth(password);
        if(jedis.ping().equalsIgnoreCase("pong")){
            plugin.getLogger().info("redis加载成功.");
@@ -32,7 +32,7 @@ public class redis {
            plugin.getLogger().info("redis.加载失败.");
            plugin.onDisable();
        }
-       return jedis;
+       return this.jedis;
    }
    public HashMap<String,Object> getDate(){
        long startTime = System.currentTimeMillis();
@@ -55,7 +55,7 @@ public class redis {
        new BukkitRunnable() {
            @Override
            public void run() {
-               ConnectRedis().set(key,value);
+               jedis.set(key,value);
            }
        }.runTaskAsynchronously(plugin);
    }

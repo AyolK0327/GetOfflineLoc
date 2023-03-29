@@ -1,9 +1,14 @@
 package yumcraft.getofflineloc.Task;
 
-import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import yumcraft.getofflineloc.Redis.redis;
+import redis.clients.jedis.Jedis;
+import yumcraft.getofflineloc.Redis.redisUnity;
+import yumcraft.getofflineloc.Sql.sql;
+
+import java.util.HashMap;
+import java.util.Set;
+
 
 /**
  * @author: Ayolk
@@ -12,18 +17,36 @@ import yumcraft.getofflineloc.Redis.redis;
  */
 public class taskSaveDate{
     private Plugin plugin;
-    taskSaveDate(Plugin plugin){
+    public taskSaveDate(Plugin plugin){
         this.plugin = plugin;
     }
     public void taskSaveDate1(){
+        redisUnity redisUnity = new redisUnity(plugin);
+        sql sql = new sql();
+        sql.getHikari();
+        Jedis jedis = redisUnity.getJedis();
         new BukkitRunnable() {
             @Override
             public void run() {
-                redis redis1 = new redis(plugin);
-                redis1.ConnectRedis();
-                redis1.getDate();
+                HashMap< String ,Object> Date =  redisUnity.getDate();
+                if(Date == null){
+                    plugin.getLogger().info("空数据");
+                    return;
+                }
+                Set<String> setKey = Date.keySet();
+                for(String key : setKey){
+                    Date.get(key);
+                    plugin.getLogger().info(key + "  Value:"+Date.get(key));
+                    if(sql.hasValue(key)){
+                        sql.Update(Date.get(key),key);
+                    }else {
+                        sql.Insert(key,Date.get(key));
+                    }
 
+
+                    jedis.del("GetOfflineLoc:"+key);
+                }
             }
-        }.runTaskTimerAsynchronously(plugin,20 ,20);
+        }.runTaskTimerAsynchronously(plugin,0 ,5 * 20);
     }
 }

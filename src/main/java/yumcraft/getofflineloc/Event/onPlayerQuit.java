@@ -5,8 +5,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import redis.clients.jedis.Jedis;
 import yumcraft.getofflineloc.Unity.serializeUnity;
-import yumcraft.getofflineloc.Redis.redis;
+import yumcraft.getofflineloc.Redis.redisUnity;
 
 import java.io.*;
 import java.util.Map;
@@ -18,27 +19,28 @@ import java.util.Map;
  */
 public class onPlayerQuit implements Listener {
     private Plugin plugin;
+    private redisUnity jedis;
     public onPlayerQuit(Plugin plugin){
         this.plugin = plugin;
+        this.jedis = new redisUnity(plugin);
+        jedis.getJedis();
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
         if(plugin.getConfig().getBoolean("Switch")){
             return;
         }
-
         Location location = event.getPlayer().getLocation();
         serializeUnity serializeUnity = new serializeUnity();
         String ServerName = plugin.getConfig().getString("ServerName");
         String Key = "GetOfflineLoc:"+event.getPlayer().getUniqueId();
         // 转换成json
-
         serializeUnity.setLocation(location);
         serializeUnity.serialize(ServerName);
 
-        new redis(plugin).UpdateData(Key,serializeUnity.getValue());
-
+        jedis.UpdateData(Key,serializeUnity.getValue());
     }
+
 
 
 
