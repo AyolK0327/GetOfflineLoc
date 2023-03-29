@@ -42,12 +42,17 @@ public class sql {
         }
     }
     //查询
-    public void Select(String Query,Object... parameters) {
+    public boolean hasValue(String Query,Object... parameters) {
         try {
-            executeQuery(Query,parameters);
+            ResultSet resultSet = executeQuery(Query,parameters);
+            if (resultSet != null) {
+                return resultSet.next();
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
+        return false;
     }
     //删除 may not
 
