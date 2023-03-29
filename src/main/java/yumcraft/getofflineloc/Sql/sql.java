@@ -1,10 +1,10 @@
 package yumcraft.getofflineloc.Sql;
 
-import com.sun.rowset.CachedRowSetImpl;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,12 +30,26 @@ public class sql {
         config.setAutoCommit(true);
 
         hikari = new HikariDataSource(config);
-        Connection connection = hikari.getConnection();
-    }
-
-    public void test(){
 
     }
+
+    //增加
+    public void Insert(String Query,Object... parameters) {
+        try {
+            execute(Query,parameters);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //查询
+    public void Select(String Query,Object... parameters) {
+        try {
+            executeQuery(Query,parameters);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    //删除 may not
 
     //抄来的,记得写
     private void execute(String query, Object... parameters) {
@@ -64,10 +78,10 @@ public class sql {
                     statement.setObject(i + 1, parameters[i]);
                 }
             }
+            //修改原来的方法,自己去找来看吧
+            CachedRowSet resultCached = RowSetProvider.newFactory().createCachedRowSet();
 
-            CachedRowSet resultCached = new CachedRowSetImpl();
             ResultSet resultSet = statement.executeQuery();
-
             resultCached.populate(resultSet);
             resultSet.close();
 
