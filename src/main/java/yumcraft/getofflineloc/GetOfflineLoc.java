@@ -23,7 +23,11 @@ public final class GetOfflineLoc extends JavaPlugin {
         this.getCommand("GetOfflineLoc").setExecutor(new command(this));
         //
         this.getServer().getPluginManager().registerEvents(new onPlayerQuit(this), this);
-        new taskSaveDate(this).taskSaveDate1();
+
+        if(getConfig().getBoolean("Switch")){
+            new taskSaveDate(this).taskSaveDate1();
+        }
+
     }
 
     @Override

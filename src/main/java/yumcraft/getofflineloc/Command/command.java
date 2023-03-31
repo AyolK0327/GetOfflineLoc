@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import yumcraft.getofflineloc.API.GetOfflineLocApi;
+import yumcraft.getofflineloc.Sql.sql;
 
 /**
  * @author: Ayolk
@@ -30,14 +31,16 @@ public class command implements CommandExecutor {
         if(!(sender instanceof Player)){
             return false;
         }
-        
+
         Location location = player.getLocation();
         if(args[0].equalsIgnoreCase("tp")){
             if(!plugin.getConfig().getBoolean("Switch")){
                 sender.sendMessage("本服未开启传送功能.");
                 return false;
             }
-            GetOfflineLocApi.Factory.getTeleportAPI().teleport(player,"World",location);
+            sql sql =new sql(plugin);
+            sql.hasValue();
+            GetOfflineLocApi.Factory.getTeleportAPI().teleport(player,plugin.getConfig().getString("ServerName"),location);
         }
 
         return false;

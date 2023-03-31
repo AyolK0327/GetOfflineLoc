@@ -2,9 +2,12 @@ package yumcraft.getofflineloc.Sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetProvider;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,17 +19,50 @@ import java.sql.SQLException;
  * @url: github.com/AyolK0327/GetOfflineLoc
  */
 public class sql {
+    public sql(Plugin plugin){
+        this.plugin = plugin;
+    }
+    private Plugin plugin;
     private static HikariDataSource hikari;
 
-    public HikariDataSource getHikari(){
-        HikariConfig config = new HikariConfig();
-        config.setConnectionTimeout(30000);
-        config.setMinimumIdle(10);
-        config.setMaximumPoolSize(10);
+    public YamlConfiguration config;
 
-        config.setJdbcUrl("jdbc:mysql://localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC");
-        config.setUsername("root");
-        config.setPassword("1234567890");
+    private void configuration(){
+        File file = new File(plugin.getDataFolder() + "\\datasource.yml");
+        this.config = YamlConfiguration.loadConfiguration(file);
+        if(!file.exists()){
+            plugin.saveResource("datasource.yml",false);
+        }
+    };
+    private YamlConfiguration getConfig(){
+        return this.config;
+    }
+    public HikariDataSource getHikari(){
+        configuration();
+        YamlConfiguration ConfigDatasource = getConfig();
+        HikariConfig config = new HikariConfig();
+        plugin.getLogger().info(ConfigDatasource.getString("DefaultSettings.AutoCommit"));
+        config.setDriverClassName(ConfigDatasource.getString("DefaultSettings.DriverClassName"));
+        config.setAutoCommit(ConfigDatasource.getBoolean("DefaultSettings.AutoCommit"));
+        config.setMinimumIdle(ConfigDatasource.getInt("DefaultSettings.MinimumIdle"));
+        config.setMaximumPoolSize(ConfigDatasource.getInt("DefaultSettings.MaximumPoolSize"));
+        config.setValidationTimeout(ConfigDatasource.getInt("DefaultSettings.ValidationTimeout"));
+        config.setConnectionTimeout(ConfigDatasource.getInt("DefaultSettings.ConnectionTimeout"));
+        config.setIdleTimeout(ConfigDatasource.getInt("DefaultSettings.IdleTimeout"));
+        config.setMaxLifetime(ConfigDatasource.getInt("DefaultSettings.MaxLifetime"));
+        config.setConnectionTestQuery(ConfigDatasource.getString("DefaultSettings.ConnectionTestQuery"));
+        config.addDataSourceProperty("prepStmtCacheSize",ConfigDatasource.getInt("DefaultSettings.  DataSourceProperty.prepStmtCacheSize"));
+        config.addDataSourceProperty("prepStmtCacheSqlLimit",ConfigDatasource.getInt("DefaultSettings.DataSourceProperty.prepStmtCacheSqlLimit"));
+        config.addDataSourceProperty("cachePrepStmts",ConfigDatasource.getBoolean("DefaultSettings.  DataSourceProperty.cachePrepStmts"));
+        config.addDataSourceProperty("useServerPrepStmts",ConfigDatasource.getBoolean("DefaultSettings.  DataSourceProperty.useServerPrepStmts"));
+
+        String host = plugin.getConfig().getString("Mysql.host");
+        String port = plugin.getConfig().getString("Mysql.port");
+        String   database = plugin.getConfig().getString("Mysql.database");
+
+        config.setJdbcUrl("jdbc:mysql://"+host+":"+port+"/"+database+"?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC");
+        config.setUsername(plugin.getConfig().getString("Mysql.username"));
+        config.setPassword(plugin.getConfig().getString("Mysql.password"));
 
         config.setAutoCommit(true);
 
@@ -46,6 +82,13 @@ public class sql {
     public void Update(Object... parameters) {
         try {
             execute(Query.UPDATE_LOCATION,parameters);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void getLocation(Object... parameters) {
+        try {
+            execute(Query.GET_LOCATION,parameters);
         }catch (Exception e){
             e.printStackTrace();
         }

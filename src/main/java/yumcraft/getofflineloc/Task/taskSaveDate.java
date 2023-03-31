@@ -22,7 +22,7 @@ public class taskSaveDate{
     }
     public void taskSaveDate1(){
         redisUnity redisUnity = new redisUnity(plugin);
-        sql sql = new sql();
+        sql sql = new sql(plugin);
         sql.getHikari();
         Jedis jedis = redisUnity.getJedis();
         new BukkitRunnable() {

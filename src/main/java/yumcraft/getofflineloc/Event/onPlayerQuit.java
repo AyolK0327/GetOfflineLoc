@@ -5,9 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
-import redis.clients.jedis.Jedis;
-import yumcraft.getofflineloc.Unity.serializeUnity;
 import yumcraft.getofflineloc.Redis.redisUnity;
+import yumcraft.getofflineloc.Unity.serializeUnity;
 
 import java.io.*;
 import java.util.Map;

@@ -26,10 +26,7 @@ public class redisUnity {
        //通过连接池对象获取连接redis的连接对象
        jedis = jedisPool.getResource();
        jedis.auth(password);
-       if(jedis.ping().equalsIgnoreCase("pong")){
-           plugin.getLogger().info("redis加载成功.");
-       }else{
-           plugin.getLogger().info("redis.加载失败.");
+       if(!jedis.ping().equalsIgnoreCase("pong")){
            plugin.onDisable();
        }
        return this.jedis;
