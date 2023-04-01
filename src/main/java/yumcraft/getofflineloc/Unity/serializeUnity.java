@@ -1,9 +1,14 @@
 package yumcraft.getofflineloc.Unity;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.json.simple.JSONObject;
+import org.bukkit.World;
+import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author: Ayolk
@@ -27,7 +32,6 @@ public class serializeUnity {
         this.locY = location.getY();
         this.yaw = location.getYaw();
         this.pitch = location.getPitch();
-
     }
     public String getValue(){
         if(this.Value == null){
@@ -51,6 +55,19 @@ public class serializeUnity {
 
         JSONObject jsonObject = new JSONObject(loc);
         this.Value = jsonObject.toJSONString();
+    }
+    public Location getLocation(String rawLocation){
+        JSONObject jsonObject = JSON.parseObject(rawLocation);
+        Double X = jsonObject.getDouble("X");
+        Double Y = jsonObject.getDouble("Y");
+        Double Z = jsonObject.getDouble("Z");
+        float yaw = jsonObject.getFloat("yaw");
+        float pitch = jsonObject.getFloat("pitch");
+        World world = Bukkit.getWorld(jsonObject.getString("World"));
+        return new Location(world,X,Y,Z,yaw,pitch);
+    }
+    public String getServerName(String rawLocation){
+        return JSON.parseObject(rawLocation).getString("ServerName");
     }
 
 

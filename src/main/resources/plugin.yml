@@ -3,6 +3,7 @@ version: '${project.version}'
 main: yumcraft.getofflineloc.GetOfflineLoc
 api-version: 1.19
 authors: [ AyolK , Doofenshmirtz ]
+softdepend: [ServerTeleport]
 commands:
   GetOfflineLoc:
     aliases:

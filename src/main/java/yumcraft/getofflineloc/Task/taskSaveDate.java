@@ -17,13 +17,14 @@ import java.util.Set;
  */
 public class taskSaveDate{
     private Plugin plugin;
-    public taskSaveDate(Plugin plugin){
+    private sql sql;
+    public taskSaveDate(Plugin plugin,sql sql){
         this.plugin = plugin;
+        this.sql = sql;
     }
     public void taskSaveDate1(){
         redisUnity redisUnity = new redisUnity(plugin);
-        sql sql = new sql(plugin);
-        sql.getHikari();
+
         Jedis jedis = redisUnity.getJedis();
         new BukkitRunnable() {
             @Override
@@ -35,8 +36,9 @@ public class taskSaveDate{
                 }
                 Set<String> setKey = Date.keySet();
                 for(String key : setKey){
+                    //plugin.getLogger().info(key);
                     Date.get(key);
-                    plugin.getLogger().info(key + "  Value:"+Date.get(key));
+                    //plugin.getLogger().info(key + "  Value:"+Date.get(key));
                     if(sql.hasValue(key)){
                         sql.Update(Date.get(key),key);
                     }else {

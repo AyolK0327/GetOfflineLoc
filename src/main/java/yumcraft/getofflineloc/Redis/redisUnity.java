@@ -45,7 +45,7 @@ public class redisUnity {
        }
        long endTime = System.currentTimeMillis();
        float excTime = (float) (endTime - startTime) / 1000;
-       System.out.println("执行时间：" + excTime + "s");
+       //System.out.println("执行时间：" + excTime + "s");
        return Date;
    }
    public void UpdateData(String key ,String value){

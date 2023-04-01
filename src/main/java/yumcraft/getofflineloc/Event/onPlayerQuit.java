@@ -3,6 +3,7 @@ package yumcraft.getofflineloc.Event;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import yumcraft.getofflineloc.Redis.redisUnity;
@@ -26,6 +27,22 @@ public class onPlayerQuit implements Listener {
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
+        //false
+        if(plugin.getConfig().getBoolean("Switch")){
+            return;
+        }
+        Location location = event.getPlayer().getLocation();
+        serializeUnity serializeUnity = new serializeUnity();
+        String ServerName = plugin.getConfig().getString("ServerName");
+        String Key = "GetOfflineLoc:"+event.getPlayer().getUniqueId();
+        // 转换成json
+        serializeUnity.setLocation(location);
+        serializeUnity.serialize(ServerName);
+
+        jedis.UpdateData(Key,serializeUnity.getValue());
+    }
+    @EventHandler
+    public void onPlayerQuit1(PlayerKickEvent event){
         if(plugin.getConfig().getBoolean("Switch")){
             return;
         }

@@ -86,12 +86,12 @@ public class sql {
             e.printStackTrace();
         }
     }
-    public void getLocation(Object... parameters) {
-        try {
-            execute(Query.GET_LOCATION,parameters);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+    public String getLocation(Object... parameters) throws SQLException {
+        ResultSet resultSet = executeQuery(Query.GET_LOCATION,parameters);
+        resultSet.next();
+        String a = resultSet.getString("LocValue");
+        plugin.getLogger().info(a);
+        return a;
     }
 
     //查询
@@ -121,7 +121,6 @@ public class sql {
                     statement.setObject(i + 1, parameters[i]);
                 }
             }
-
             statement.execute();
         } catch (SQLException ex) {
             ex.printStackTrace();

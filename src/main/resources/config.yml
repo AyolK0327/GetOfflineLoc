@@ -1,14 +1,16 @@
 ServerName: lobby
+
+#注意此开关只需要在一个服打开
 #是否开启传送功能
 Switch: false
 
 Mysql:
   host: localhost
   port: 3306
-  database: test
+  database: getofflineloc
   username: root
-  password: '1234567890'
+  password: ""
 Redis:
   host: localhost
-  port: 6378
-  password: 4WYlacAwnzpBmELO
+  port: 6379
+  password: ""
