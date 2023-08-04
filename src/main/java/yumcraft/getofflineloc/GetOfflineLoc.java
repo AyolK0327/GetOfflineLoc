@@ -1,5 +1,6 @@
 package yumcraft.getofflineloc;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,15 +12,17 @@ import yumcraft.getofflineloc.Command.command;
 import yumcraft.getofflineloc.Event.onPlayerQuit;
 import yumcraft.getofflineloc.Redis.redisUnity;
 import yumcraft.getofflineloc.Sql.sql;
+import yumcraft.getofflineloc.Task.autoTeleport;
 import yumcraft.getofflineloc.Task.taskSaveDate;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class GetOfflineLoc extends JavaPlugin implements PluginMessageListener {
-
     @Override
     public void onEnable() {
-
+        HashMap<String,Integer> autoTeleport = new HashMap<>();
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
         // Plugin startup logic
         FileConfiguration config = this.getConfig();
@@ -27,9 +30,16 @@ public final class GetOfflineLoc extends JavaPlugin implements PluginMessageList
         //
         sql sql = new sql(this);
         sql.getHikari();
-        this.getCommand("GetOfflineLoc").setExecutor(new command(this,sql));
+        this.getCommand("GetOfflineLoc").setExecutor(new command(this,sql,autoTeleport));
         //
-        this.getServer().getPluginManager().registerEvents(new onPlayerQuit(this), this);
+        this.getServer().getPluginManager().registerEvents(new onPlayerQuit(this,autoTeleport), this);
+        //延迟传送
+        if(getConfig().getBoolean("autoTeleport.enable")){
+            //     玩家名字,倒计时
+
+            //开启
+            new autoTeleport(this,autoTeleport,sql).timer();
+        }
 
         if(getConfig().getBoolean("Switch")){
             new taskSaveDate(this,sql).taskSaveDate1();

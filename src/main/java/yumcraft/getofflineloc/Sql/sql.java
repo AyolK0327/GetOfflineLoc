@@ -89,9 +89,12 @@ public class sql {
     public String getLocation(Object... parameters) throws SQLException {
         ResultSet resultSet = executeQuery(Query.GET_LOCATION,parameters);
         resultSet.next();
-        String a = resultSet.getString("LocValue");
-        plugin.getLogger().info(a);
-        return a;
+        //plugin.getLogger().info(a);
+        return resultSet.getString("LocValue");
+    }
+    public boolean firstJoin(Object... parameters)throws SQLException{
+        ResultSet resultSet = executeQuery(Query.GET_LOCATION,parameters);
+        return resultSet.next();
     }
 
     //查询

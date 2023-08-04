@@ -4,6 +4,20 @@ ServerName: lobby
 #是否开启传送功能
 Switch: false
 
+##
+autoTeleport:
+  enable: true
+  delay: 15
+  type: normal
+  tips: "&a将在 &f%s% &a秒后传送至云猫社区."
+  location:
+    server: "spawn"
+    world: "world"
+    x: -468.00
+    y: 65.00
+    z: -545.00
+
+
 Mysql:
   host: localhost
   port: 3306

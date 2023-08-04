@@ -10,6 +10,7 @@ import yumcraft.getofflineloc.Redis.redisUnity;
 import yumcraft.getofflineloc.Unity.serializeUnity;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,13 +21,20 @@ import java.util.Map;
 public class onPlayerQuit implements Listener {
     private Plugin plugin;
     private redisUnity jedis;
-    public onPlayerQuit(Plugin plugin){
+    private HashMap<String,Integer> autoTeleport;
+    public onPlayerQuit(Plugin plugin,HashMap<String,Integer> autoTeleport){
         this.plugin = plugin;
         this.jedis = new redisUnity(plugin);
         jedis.getJedis();
+        this.autoTeleport = autoTeleport;
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event){
+        plugin.getLogger().info("test");
+        if(autoTeleport.get(event.getPlayer().getName()) != null){
+            autoTeleport.remove(event.getPlayer().getName());
+        }
+
         //false
         if(plugin.getConfig().getBoolean("Switch")){
             return;

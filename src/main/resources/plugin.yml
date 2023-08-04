@@ -4,6 +4,10 @@ main: yumcraft.getofflineloc.GetOfflineLoc
 api-version: 1.19
 authors: [ AyolK , Doofenshmirtz ]
 softdepend: [ServerTeleport]
+libraries:
+  - "com.zaxxer:HikariCP:5.0.1"
+  - "redis.clients:jedis:2.9.0"
+  - "com.alibaba:fastjson:1.2.67_noneautotype2"
 commands:
   GetOfflineLoc:
     aliases:

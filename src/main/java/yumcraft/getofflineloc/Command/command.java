@@ -1,21 +1,18 @@
 package yumcraft.getofflineloc.Command;
 
-import com.xbaimiao.server.teleport.ServerTeleport;
 import com.xbaimiao.server.teleport.api.TeleportAPI;
-import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import yumcraft.getofflineloc.API.GetOfflineLocApi;
 import yumcraft.getofflineloc.Sql.sql;
 import yumcraft.getofflineloc.Unity.serializeUnity;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  * @author: Ayolk
@@ -25,9 +22,11 @@ import java.sql.SQLException;
 public class command implements CommandExecutor {
     private Plugin plugin;
     private sql sql;
-    public command(Plugin plugin,sql sql){
+    private HashMap<String,Integer> autoTeleport;
+    public command(Plugin plugin,sql sql,HashMap<String,Integer> autoTeleport){
         this.plugin = plugin;
         this.sql = sql;
+        this.autoTeleport = autoTeleport;
     }
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -40,9 +39,13 @@ public class command implements CommandExecutor {
         if(!(sender instanceof Player)){
             return false;
         }
+        if(args[0].equalsIgnoreCase("tps")){
+            plugin.getLogger().info("玩家"+player.getName()+"加入传送队列.");
+            autoTeleport.put(player.getName(),plugin.getConfig().getInt("autoTeleport.delay"));
+        }
         if(args[0].equalsIgnoreCase("tp")){
             try {
-                String LocValue = new sql(plugin).getLocation(player.getUniqueId().toString());
+                String LocValue = sql.getLocation(player.getUniqueId().toString());
                 Location location = new serializeUnity().getLocation(LocValue);
                 String ServerName = new serializeUnity().getServerName(LocValue);
                 TeleportAPI.Factory.getTeleportAPI().teleport(player,ServerName,location);

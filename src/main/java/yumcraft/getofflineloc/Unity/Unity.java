@@ -15,4 +15,7 @@ public class Unity implements GetOfflineLocApi {
     public void teleport(Player player, String ServerName, Location location) {
         TeleportAPI.Factory.getTeleportAPI().teleport(player,ServerName,location);
     }
+    public void teleport(Player player, String ServerName,String world, double x,double y,double z) {
+        TeleportAPI.Factory.getTeleportAPI().teleport(player,ServerName,world,x,y,z);
+    }
 }
